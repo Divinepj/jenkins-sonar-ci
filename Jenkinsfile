@@ -31,14 +31,13 @@ pipeline {
         }
     }
     
-    /*
     stage('SonarQube: Code Analysis') {
         environment {
             scannerHome = tool 'sonar-scanner'
         }
 
         steps {
-            withSonarQubeEnv('sonarserver') {
+            withSonarQubeEnv('sonar-server') {
                 sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=darey_web_app \
                     -Dsonar.projectName=darey_web_app \
                     -Dsonar.projectVersion=1.0 \
@@ -51,7 +50,7 @@ pipeline {
         }
     }
     
-    stage("Quality Gate") {
+    /*stage("Quality Gate") {
         steps {
             timeout(time: 10, unit: 'MINUTES') {
                 waitForQualityGate abortPipeline: true
