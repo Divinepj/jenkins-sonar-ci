@@ -1,29 +1,25 @@
 pipeline {
+    agent any
     
-	agent any
-	
-	tools {
-        maven "MAVEN3" // Use the name you configured for Maven
-        jdk "ORACLEJDK11" // Use the name you configured for JDK
+    tools {
+        maven 'MAVEN3' // Use the name you configured for Maven
+        jdk 'ORACLEJDK11' // Use the name you configured for JDK
     }
-	
-	
-    stages{
-        
-        stage('Build'){
+    
+    stages {
+        stage('Build') {
             steps {
                 sh 'mvn clean install -DskipTests'
             }
-
         }
 
-        stage('Unit Test'){
+        stage('Unit Test') {
             steps {
                 sh 'mvn test'
             }
         }
-		
-        stage ('Checkstyle: Code Analysis'){
+        
+        stage('Checkstyle: Code Analysis') {
             steps {
                 sh 'mvn checkstyle:checkstyle'
             }
@@ -34,34 +30,33 @@ pipeline {
             }
         }
     }
-}
-
-       /*stage('SonarQube: Code Analysis') {
-          
-		  environment {
-             scannerHome = tool 'sonar-scanner'
-          }
-
-          steps {
-            withSonarQubeEnv('sonarserver') {
-               sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=darey_web_app \
-                   -Dsonar.projectName=darey_web_app \
-                   -Dsonar.projectVersion=1.0 \
-                   -Dsonar.sources=src/ \
-                   -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/ \
-                   -Dsonar.junit.reportsPath=target/surefire-reports/ \
-                   -Dsonar.jacoco.reportsPath=target/jacoco.exec \
-                   -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml'''
-                } 
-            }
+    
+    /*
+    stage('SonarQube: Code Analysis') {
+        environment {
+            scannerHome = tool 'sonar-scanner'
         }
-        
-        stage ("Quality Gate") {
-            steps {
-                timeout(time: 10, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }   
+
+        steps {
+            withSonarQubeEnv('sonarserver') {
+                sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=darey_web_app \
+                    -Dsonar.projectName=darey_web_app \
+                    -Dsonar.projectVersion=1.0 \
+                    -Dsonar.sources=src/ \
+                    -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/ \
+                    -Dsonar.junit.reportsPath=target/surefire-reports/ \
+                    -Dsonar.jacoco.reportsPath=target/jacoco.exec \
+                    -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml'''
             }
         }
     }
+    
+    stage("Quality Gate") {
+        steps {
+            timeout(time: 10, unit: 'MINUTES') {
+                waitForQualityGate abortPipeline: true
+            }
+        }
+    }
+    */
 }
