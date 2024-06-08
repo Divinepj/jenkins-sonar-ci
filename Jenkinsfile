@@ -2,8 +2,8 @@ pipeline {
     agent any
     
     tools {
-        maven 'MAVEN3' // Use the name you configured for Maven
-        jdk 'ORACLEJDK11' // Use the name you configured for JDK
+        maven "MAVEN3" // Use the name you configured for Maven
+        jdk "ORACLEJDK11" // Use the name you configured for JDK
     }
     
     stages {
@@ -29,33 +29,36 @@ pipeline {
                 }
             }
         }
-    }
-    
+        
         stage('SonarQube: Code Analysis') {
             environment {
                 scannerHome = tool 'sonar-scanner'
-        }
-
-        steps {
-            withSonarQubeEnv('sonar-server') {
-                sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=darey_web_app \
-                    -Dsonar.projectName=darey_web_app \
-                    -Dsonar.projectVersion=1.0 \
-                    -Dsonar.sources=src/ \
-                    -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/ \
-                    -Dsonar.junit.reportsPath=target/surefire-reports/ \
-                    -Dsonar.jacoco.reportsPath=target/jacoco.exec \
-                    -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml'''
+            }
+            steps {
+                withSonarQubeEnv('sonarserver') {
+                    sh '''
+                    ${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=darey_web_app \
+                        -Dsonar.projectName=darey_web_app \
+                        -Dsonar.projectVersion=1.0 \
+                        -Dsonar.sources=src/ \
+                        -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/ \
+                        -Dsonar.junit.reportsPath=target/surefire-reports/ \
+                        -Dsonar.jacoco.reportsPath=target/jacoco.exec \
+                        -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml
+                    '''
+                }
             }
         }
-    }
-    
-    /*stage("Quality Gate") {
-        steps {
-            timeout(time: 10, unit: 'MINUTES') {
-                waitForQualityGate abortPipeline: true
+        
+        /*
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 10, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
             }
         }
+        */
     }
-    */
 }
