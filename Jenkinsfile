@@ -33,6 +33,8 @@ pipeline {
                 }
             }
         }
+    }
+}
 
        /*stage('SonarQube: Code Analysis') {
           
