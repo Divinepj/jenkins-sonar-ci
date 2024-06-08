@@ -3,8 +3,8 @@ pipeline {
 	agent any
 	
 	tools {
-        maven "Maven3"
-        jdk "OracleJDK11"
+        maven "MAVEN3" // Use the name you configured for Maven
+        jdk "ORACLEJDK11" // Use the name you configured for JDK
     }
 	
 	
